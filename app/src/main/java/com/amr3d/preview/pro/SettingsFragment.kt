@@ -38,6 +38,9 @@ class SettingsFragment : Fragment() {
             }
             if (newLang != LocaleHelper.getSavedLanguage(ctx)) {
                 LocaleHelper.setLanguage(ctx, newLang)
+                // إعادة تشغيل نظيفة بالكامل (مش recreate) — عشان نتجنب تعارض
+                // الفراجمنتس المحفوظة تلقائياً مع اللي بيضيفها MainActivity يدوياً،
+                // اللي كان بيسبب كراش وإحساس إن التطبيق "بيقفل ويفتح لوحده"
                 val restartIntent = Intent(ctx, MainActivity::class.java).apply {
                     flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                 }
@@ -120,40 +123,37 @@ class SettingsFragment : Fragment() {
             prefs.edit().putBoolean("anim_enabled", checked).apply()
         }
 
-        // ══ المحور الرأسي Z-up ══
+        // ══ المحور الرأسي Z-up (لملفات 3ds Max/CAD) — الافتراضي: مفعّل ══
         val zUpSwitch = view.findViewById<Switch>(R.id.switchZUp)
         zUpSwitch.isChecked = prefs.getBoolean("zup_mode", true)
         zUpSwitch.setOnCheckedChangeListener { _, checked ->
             prefs.edit().putBoolean("zup_mode", checked).apply()
         }
 
-        // ══ إظهار الانعكاس ══
+        // ══ إظهار الانعكاس تحت الموديل — الافتراضي: مفعّل ══
         val reflectionSwitch = view.findViewById<Switch>(R.id.switchReflection)
         reflectionSwitch.isChecked = prefs.getBoolean("reflection_enabled", true)
         reflectionSwitch.setOnCheckedChangeListener { _, checked ->
             prefs.edit().putBoolean("reflection_enabled", checked).apply()
         }
 
-        // ══ عداد Faces/Vertices ══
+        // ══ عداد Faces/Vertices أعلى شاشة العارض — الافتراضي: ظاهر ══
         val faceCountSwitch = view.findViewById<Switch>(R.id.switchFaceCount)
         faceCountSwitch.isChecked = prefs.getBoolean("show_face_count", true)
         faceCountSwitch.setOnCheckedChangeListener { _, checked ->
             prefs.edit().putBoolean("show_face_count", checked).apply()
         }
 
-        // ══ اظهار النورمال - جديد ══
-        val showNormalsSwitch = view.findViewById<Switch>(R.id.switchShowNormals)
-        showNormalsSwitch.isChecked = prefs.getBoolean("show_normals", false)
-        showNormalsSwitch.setOnCheckedChangeListener { _, checked ->
-            prefs.edit().putBoolean("show_normals", checked).apply()
-        }
-
-        // ══ الوضع الفاتح/الغامق ══
+        // ══ الوضع الفاتح/الغامق للواجهة — الافتراضي: غامق (زي ما كان دايمًا) ══
         val lightModeSwitch = view.findViewById<Switch>(R.id.switchLightMode)
         lightModeSwitch.isChecked = AppDisplayMode.isLight(requireContext())
         lightModeSwitch.setOnCheckedChangeListener { _, checked ->
             if (checked != AppDisplayMode.isLight(requireContext())) {
                 AppDisplayMode.setLight(requireContext(), checked)
+                // بالظبط نفس منطق تغيير اللغة فوق: إعادة تشغيل نظيفة بالكامل (مش recreate)
+                // عشان نتجنب تعارض الفراجمنتس المحفوظة تلقائياً مع اللي بيضيفها MainActivity
+                // يدوياً — recreate() (سواء يدوي أو التلقائي اللي بيعمله AppCompatDelegate
+                // نفسه) كان بيسيب bottomNav في حالة متضاربة ويوقف التنقل تمامًا.
                 val restartIntent = Intent(ctx, MainActivity::class.java).apply {
                     flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                 }
@@ -171,7 +171,7 @@ class SettingsFragment : Fragment() {
                     Uri.parse("whatsapp://send?phone=$phone&text=$msg"))
                     .apply { setPackage("com.whatsapp") })
             } catch (_: Exception) {
-                startActivity(Intent.ACTION_VIEW, Uri.parse("https://wa.me/$phone?text=$msg")))
+                startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://wa.me/$phone?text=$msg")))
             }
         }
 
@@ -230,6 +230,7 @@ class SettingsFragment : Fragment() {
             "${greeting}🎮  Amr3D Preview Pro\nالإصدار 7.0\nAmr Hamam 3D © 2026"
     }
 
+    /** يبني صف دوائر ألوان الثيم القابلة للاختيار */
     private fun setupThemeRow(view: View) {
         val ctx = requireContext()
         val row = view.findViewById<LinearLayout>(R.id.themeColorRow)
@@ -263,6 +264,7 @@ class SettingsFragment : Fragment() {
                     c.drawCircle(cx, cy, r, p)
                     p.shader = null
 
+                    // بريق
                     p.shader = android.graphics.RadialGradient(
                         cx - r * 0.2f, cy - r * 0.25f, r * 0.5f,
                         intArrayOf(0x99FFFFFF.toInt(), 0x00FFFFFF),
@@ -271,6 +273,7 @@ class SettingsFragment : Fragment() {
                     c.drawCircle(cx - r * 0.1f, cy - r * 0.15f, r * 0.45f, p)
                     p.shader = null
 
+                    // حلقة اختيار
                     if (theme == AppTheme.getCurrent(ctx)) {
                         p.style = android.graphics.Paint.Style.STROKE
                         p.strokeWidth = 3f
@@ -282,7 +285,7 @@ class SettingsFragment : Fragment() {
             circle.layoutParams = LinearLayout.LayoutParams(circleSize, circleSize)
             circle.setOnClickListener {
                 AppTheme.setCurrent(ctx, theme)
-                setupThemeRow(view)
+                setupThemeRow(view) // إعادة رسم لتحديث الحلقة
                 Toast.makeText(ctx, getString(R.string.toast_theme_applied, theme.nameAr), Toast.LENGTH_LONG).show()
             }
             cell.addView(circle)
