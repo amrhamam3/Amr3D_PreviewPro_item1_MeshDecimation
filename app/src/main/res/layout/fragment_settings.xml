@@ -49,7 +49,7 @@
                 android:paddingTop="14dp" android:paddingBottom="14dp"/>
         </LinearLayout>
 
-        <!-- ══ المظهر (ثيم + لغة مع بعض في كارت واحد) ══ -->
+        <!-- ══ المظهر ══ -->
         <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
             android:text="@string/settings_appearance" android:textColor="@color/accent_orange"
             android:textSize="11sp" android:textStyle="bold" android:letterSpacing="0.06"
@@ -99,7 +99,7 @@
             </RadioGroup>
         </LinearLayout>
 
-        <!-- ══ العارض (جودة + مؤشر Pivot + دوران تلقائي + وحدة قياس مع بعض) ══ -->
+        <!-- ══ العارض ══ -->
         <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
             android:text="@string/settings_viewer_section" android:textColor="@color/accent_orange"
             android:textSize="11sp" android:textStyle="bold" android:letterSpacing="0.06"
@@ -173,6 +173,7 @@
                     android:thumbTint="@color/accent_orange" android:trackTint="#3AFF8A1E"/>
             </LinearLayout>
 
+            <!-- 1. عداد Faces -->
             <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
                 android:orientation="horizontal" android:gravity="center_vertical"
                 android:paddingStart="10dp" android:paddingEnd="10dp"
@@ -185,11 +186,12 @@
                         android:text="نص صغير أعلى شاشة العرض يوضح عدد Faces وVertices" android:textColor="@color/text_secondary" android:textSize="11sp"
                         android:layout_marginTop="2dp"/>
                 </LinearLayout>
-                android:id="@+id/switchFaceCount"
+                <Switch android:id="@+id/switchFaceCount"
                     android:layout_width="wrap_content" android:layout_height="wrap_content"
                     android:thumbTint="@color/accent_orange" android:trackTint="#3AFF8A1E"/>
             </LinearLayout>
 
+            <!-- 2. اظهار النورمال -->
             <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
                 android:orientation="horizontal" android:gravity="center_vertical"
                 android:paddingStart="10dp" android:paddingEnd="10dp"
@@ -197,18 +199,18 @@
                 <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content"
                     android:layout_weight="1" android:orientation="vertical">
                     <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                        android:text="إظهار عدد المثلثات والرؤوس" android:textColor="@color/text_primary" android:textSize="14sp"/>
+                        android:text="إظهار النورمال" android:textColor="@color/text_primary" android:textSize="14sp"/>
                     <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                        android:text="نص صغير أعلى شاشة العرض (Faces / Vertices)" android:textColor="@color/text_secondary" android:textSize="11sp"
+                        android:text="يظهر خطوط النورمال على الموديل" android:textColor="@color/text_secondary" android:textSize="11sp"
                         android:layout_marginTop="2dp"/>
                 </LinearLayout>
-                android:id="@+id/switchShowNormals"
+                <Switch android:id="@+id/switchShowNormals"
                     android:layout_width="wrap_content" android:layout_height="wrap_content"
                     android:thumbTint="@color/accent_orange" android:trackTint="#3AFF8A1E"/>
             </LinearLayout>
         </LinearLayout>
 
-        <!-- ══ عام (صوت + انيميشن مع بعض) ══ -->
+        <!-- ══ عام ══ -->
         <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
             android:text="@string/settings_general" android:textColor="@color/accent_orange"
             android:textSize="11sp" android:textStyle="bold" android:letterSpacing="0.06"
@@ -245,7 +247,7 @@
             </LinearLayout>
         </LinearLayout>
 
-        <!-- ══ الأذونات والإجراءات مع بعض ══ -->
+        <!-- ══ الأذونات والإجراءات ══ -->
         <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
             android:text="@string/settings_permissions" android:textColor="@color/accent_orange"
             android:textSize="11sp" android:textStyle="bold" android:letterSpacing="0.06"
